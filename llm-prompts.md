@@ -3247,3 +3247,669 @@ Tu peux facilement ajouter d’autres villes dans le tableau cities.
 
 Si tu veux, je peux te faire la version finale avec Zoom initial sur Paris mais Toulon visible, en gardant aussi la possibilité d’ajouter facilement d’autres villes.
 
+**Utiliser des safeareaview c mieux**
+
+You said:
+ne serait ce pas mieux ici d'utiliser un safeareaview:
+import React, { useRef, useEffect } from "react";
+import { View, StyleSheet, Dimensions } from "react-native";
+import MapView, { Marker, LatLng } from "react-native-maps";
+
+export default function CarteScreen() {
+  const mapRef = useRef<MapView>(null);
+
+  const cities: LatLng[] = [
+    { latitude: 43.1242, longitude: 5.928 },   // Toulon
+    { latitude: 48.8566, longitude: 2.3522 },  // Paris
+  ];
+
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.fitToCoordinates(cities, {
+        edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+        animated: true,
+      });
+    }
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <MapView ref={mapRef} style={styles.map}>
+        {cities.map((city, index) => (
+          <Marker key={index} coordinate={city} title={index === 0 ? "Toulon" : "Paris"} />
+        ))}
+      </MapView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  map: { width: Dimensions.get("window").width, height: Dimensions.get("window").height },
+}); 
+
+??
+c du react native expo
+ChatGPT said:
+
+Oui, dans ton cas, utiliser un SafeAreaView peut être plus sûr, surtout sur iOS, pour éviter que ta carte ne chevauche la zone de notch ou les bords arrondis. Avec un simple View, la carte peut toucher directement le haut ou le bas de l’écran et ça peut gêner l’expérience utilisateur.
+
+Voici comment tu pourrais le faire :
+
+import React, { useRef, useEffect } from "react";
+import { StyleSheet, Dimensions, SafeAreaView } from "react-native";
+import MapView, { Marker, LatLng } from "react-native-maps";
+
+export default function CarteScreen() {
+  const mapRef = useRef<MapView>(null);
+
+  const cities: LatLng[] = [
+    { latitude: 43.1242, longitude: 5.928 },   // Toulon
+    { latitude: 48.8566, longitude: 2.3522 },  // Paris
+  ];
+
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.fitToCoordinates(cities, {
+        edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+        animated: true,
+      });
+    }
+  }, []);
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <MapView ref={mapRef} style={styles.map}>
+        {cities.map((city, index) => (
+          <Marker
+            key={index}
+            coordinate={city}
+            title={index === 0 ? "Toulon" : "Paris"}
+          />
+        ))}
+      </MapView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  map: { width: Dimensions.get("window").width, height: Dimensions.get("window").height },
+});
+
+
+⚡ Remarques :
+
+Sur Android, SafeAreaView ne change rien pour les bordures classiques, mais c’est utile si tu vises les nouveaux téléphones avec encoche.
+
+Si tu veux vraiment que la carte remplisse tout l’écran, tu peux garder View mais ajouter paddingTop pour iOS avec Constants.statusBarHeight depuis expo-constants.
+
+Si tu veux, je peux te proposer une version complètement “safe” pour iOS et Android sans utiliser de dimensions fixes.
+
+Veux‑tu que je fasse ça ?
+
+**Utiliser des safeareaview c mieux**
+
+You said:
+idem pour ici :
+
+
+import React, { useState, useCallback } from "react";
+import { View, Text, Button, StyleSheet } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
+
+export default function ClickerScreen() {
+  const [chatClicks, setChatClicks] = useState(0);
+  const [dogClicks, setDogClicks] = useState(0);
+
+  // Recharge les compteurs chaque fois que l'écran est affiché
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const loadClicks = async () => {
+        const chat = await AsyncStorage.getItem("chatClicks");
+        const dog = await AsyncStorage.getItem("dogClicks");
+        if (isActive) {
+          setChatClicks(chat ? Number.parseInt(chat) : 0);
+          setDogClicks(dog ? Number.parseInt(dog) : 0);
+        }
+      };
+
+      loadClicks();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
+  const resetClicks = async () => {
+    await AsyncStorage.setItem("chatClicks", "0");
+    await AsyncStorage.setItem("dogClicks", "0");
+    setChatClicks(0);
+    setDogClicks(0);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Statistiques des clics</Text>
+      <Text style={styles.stats}>Chat : {chatClicks}</Text>
+      <Text style={styles.stats}>Dog : {dogClicks}</Text>
+      <Button title="Réinitialiser" onPress={resetClicks} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, alignItems: "center", justifyContent: "center" },
+  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+  stats: { fontSize: 18, marginVertical: 5 },
+});
+
+attention => je veuxc utiliser : 
+import { SafeAreaView } from "react-native-safe-area-context";
+ChatGPT said:
+
+Oui, là aussi tu peux remplacer ton View racine par un SafeAreaView provenant de react-native-safe-area-context. Ça garantit que ton contenu ne sera pas masqué par la barre de statut, l’encoche ou les zones arrondies sur iOS et certains Android.
+
+Voici comment tu peux adapter ton code :
+
+import React, { useState, useCallback } from "react";
+import { Text, Button, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
+
+export default function ClickerScreen() {
+  const [chatClicks, setChatClicks] = useState(0);
+  const [dogClicks, setDogClicks] = useState(0);
+
+  // Recharge les compteurs chaque fois que l'écran est affiché
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const loadClicks = async () => {
+        const chat = await AsyncStorage.getItem("chatClicks");
+        const dog = await AsyncStorage.getItem("dogClicks");
+        if (isActive) {
+          setChatClicks(chat ? Number.parseInt(chat) : 0);
+          setDogClicks(dog ? Number.parseInt(dog) : 0);
+        }
+      };
+
+      loadClicks();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
+  const resetClicks = async () => {
+    await AsyncStorage.setItem("chatClicks", "0");
+    await AsyncStorage.setItem("dogClicks", "0");
+    setChatClicks(0);
+    setDogClicks(0);
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Statistiques des clics</Text>
+      <Text style={styles.stats}>Chat : {chatClicks}</Text>
+      <Text style={styles.stats}>Dog : {dogClicks}</Text>
+      <Button title="Réinitialiser" onPress={resetClicks} />
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, alignItems: "center", justifyContent: "center" },
+  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+  stats: { fontSize: 18, marginVertical: 5 },
+});
+
+
+✅ Points clés :
+
+Le SafeAreaView remplace le View principal.
+
+Le style flex: 1 reste obligatoire pour remplir l’écran.
+
+Tout le contenu reste centré et aligné comme avant, mais il ne sera plus “coupé” par les zones sensibles de l’écran.
+
+Si tu veux, je peux te montrer une version plus “moderne” qui gère le padding automatiquement sur Android et iOS avec edges={['top', 'bottom']} pour plus de contrôle.
+
+Veux‑tu que je fasse ça ?
+
+**Utiliser des safeareaview c mieux**
+
+You said:
+idem pr:
+
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
+import { Audio } from "expo-av";
+import * as SMS from "expo-sms";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export default function HomeScreen() {
+  const [dogImage, setDogImage] = useState<string | null>(null);
+  const [loadingDog, setLoadingDog] = useState(false);
+
+  // Jouer le son du chat + compteur
+  const handleChat = async () => {
+    try {
+      const { sound } = await Audio.Sound.createAsync(
+        require("../../assets/sounds/cat.mp3")
+      );
+      await sound.playAsync();
+
+      let newCount = await AsyncStorage.getItem("chatClicks");
+      let newCountInt = (newCount ? Number.parseInt(newCount) : 0) + 1;
+      await AsyncStorage.setItem("chatClicks", newCountInt.toString());
+    } catch (err) {
+      console.warn("Erreur son chat :", err);
+    }
+  };
+
+  // Clique sur le bouton Dog : fetch image + préparation SMS
+  const handleDogButton = async () => {
+    try {
+      setLoadingDog(true);
+      const res = await fetch("https://dog.ceo/api/breeds/image/random");
+      const data = await res.json();
+      setDogImage(data.message);
+
+      const isAvailable = await SMS.isAvailableAsync();
+      if (isAvailable) {
+        await SMS.sendSMSAsync(["0606060606"], "Je n'aime pas les chats");
+      } else {
+        Alert.alert("SMS non disponible sur cet appareil");
+      }
+    } catch (err) {
+      console.warn("Erreur Dog :", err);
+      Alert.alert("Erreur lors de l'appel à l'API Dog");
+    } finally {
+      setLoadingDog(false);
+    }
+  };
+
+  // Clique sur l'image du chien : +1 compteur
+  const handleDogImageClick = async () => {
+    try {
+      let newCount = await AsyncStorage.getItem("dogClicks");
+      let newCountInt = (newCount ? Number.parseInt(newCount) : 0) + 1;
+      await AsyncStorage.setItem("dogClicks", newCountInt.toString());
+    } catch (err) {
+      console.warn("Erreur compteur Dog :", err);
+    }
+  };
+
+  const handleQuit = () => {
+    Alert.alert("Quit", "L'application va se fermer", [
+      { text: "OK", onPress: () => {} },
+    ]);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Menu Principal</Text>
+
+      {/* Image du chat */}
+      <TouchableOpacity onPress={handleChat}>
+        <Image
+          source={require("../../assets/images/cat.png")}
+          style={styles.catImage}
+        />
+      </TouchableOpacity>
+      <Text style={styles.label}>Chat</Text>
+
+      {/* Bouton Dog */}
+      <TouchableOpacity style={styles.button} onPress={handleDogButton}>
+        <Text style={styles.buttonText}>Dog</Text>
+      </TouchableOpacity>
+
+      {/* Image du chien (clic incrémente compteur) */}
+      {dogImage && (
+        <TouchableOpacity onPress={handleDogImageClick}>
+          <Image source={{ uri: dogImage }} style={styles.dogImage} />
+        </TouchableOpacity>
+      )}
+
+      {loadingDog && (
+        <ActivityIndicator
+          size="large"
+          color="#007AFF"
+          style={{ marginTop: 20 }}
+        />
+      )}
+
+      {/* Bouton Quit */}
+      <TouchableOpacity style={styles.button} onPress={handleQuit}>
+        <Text style={styles.buttonText}>Quit</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+  button: {
+    backgroundColor: "#007AFF",
+    padding: 15,
+    marginVertical: 10,
+    borderRadius: 10,
+    width: "70%",
+    alignItems: "center",
+  },
+  buttonText: { color: "white", fontSize: 18, fontWeight: "bold" },
+  catImage: { width: 200, height: 200, marginVertical: 10, borderRadius: 15 },
+  dogImage: { width: 250, height: 250, marginTop: 20, borderRadius: 15 },
+  label: { fontSize: 18, marginBottom: 20, fontWeight: "bold" },
+});
+ChatGPT said:
+
+Oui, ici aussi il vaut mieux remplacer ton View racine par un SafeAreaView de react-native-safe-area-context, surtout si tu veux éviter que tes boutons et images ne se retrouvent derrière l’encoche ou la barre de statut sur iOS.
+
+Voici une version adaptée de ton HomeScreen :
+
+
+idem pr:
+
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
+import { Audio } from "expo-av";
+import * as SMS from "expo-sms";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export default function HomeScreen() {
+  const [dogImage, setDogImage] = useState<string | null>(null);
+  const [loadingDog, setLoadingDog] = useState(false);
+
+  // Jouer le son du chat + compteur
+  const handleChat = async () => {
+    try {
+      const { sound } = await Audio.Sound.createAsync(
+        require("../../assets/sounds/cat.mp3")
+      );
+      await sound.playAsync();
+
+      let newCount = await AsyncStorage.getItem("chatClicks");
+      let newCountInt = (newCount ? Number.parseInt(newCount) : 0) + 1;
+      await AsyncStorage.setItem("chatClicks", newCountInt.toString());
+    } catch (err) {
+      console.warn("Erreur son chat :", err);
+    }
+  };
+
+  // Clique sur le bouton Dog : fetch image + préparation SMS
+  const handleDogButton = async () => {
+    try {
+      setLoadingDog(true);
+      const res = await fetch("https://dog.ceo/api/breeds/image/random");
+      const data = await res.json();
+      setDogImage(data.message);
+
+      const isAvailable = await SMS.isAvailableAsync();
+      if (isAvailable) {
+        await SMS.sendSMSAsync(["0606060606"], "Je n'aime pas les chats");
+      } else {
+        Alert.alert("SMS non disponible sur cet appareil");
+      }
+    } catch (err) {
+      console.warn("Erreur Dog :", err);
+      Alert.alert("Erreur lors de l'appel à l'API Dog");
+    } finally {
+      setLoadingDog(false);
+    }
+  };
+
+  // Clique sur l'image du chien : +1 compteur
+  const handleDogImageClick = async () => {
+    try {
+      let newCount = await AsyncStorage.getItem("dogClicks");
+      let newCountInt = (newCount ? Number.parseInt(newCount) : 0) + 1;
+      await AsyncStorage.setItem("dogClicks", newCountInt.toString());
+    } catch (err) {
+      console.warn("Erreur compteur Dog :", err);
+    }
+  };
+
+  const handleQuit = () => {
+    Alert.alert("Quit", "L'application va se fermer", [
+      { text: "OK", onPress: () => {} },
+    ]);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Menu Principal</Text>
+
+      {/* Image du chat */}
+      <TouchableOpacity onPress={handleChat}>
+        <Image
+          source={require("../../assets/images/cat.png")}
+          style={styles.catImage}
+        />
+      </TouchableOpacity>
+      <Text style={styles.label}>Chat</Text>
+
+      {/* Bouton Dog */}
+      <TouchableOpacity style={styles.button} onPress={handleDogButton}>
+        <Text style={styles.buttonText}>Dog</Text>
+      </TouchableOpacity>
+
+      {/* Image du chien (clic incrémente compteur) */}
+      {dogImage && (
+        <TouchableOpacity onPress={handleDogImageClick}>
+          <Image source={{ uri: dogImage }} style={styles.dogImage} />
+        </TouchableOpacity>
+      )}
+
+      {loadingDog && (
+        <ActivityIndicator
+          size="large"
+          color="#007AFF"
+          style={{ marginTop: 20 }}
+        />
+      )}
+
+      {/* Bouton Quit */}
+      <TouchableOpacity style={styles.button} onPress={handleQuit}>
+        <Text style={styles.buttonText}>Quit</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+  button: {
+    backgroundColor: "#007AFF",
+    padding: 15,
+    marginVertical: 10,
+    borderRadius: 10,
+    width: "70%",
+    alignItems: "center",
+  },
+  buttonText: { color: "white", fontSize: 18, fontWeight: "bold" },
+  catImage: { width: 200, height: 200, marginVertical: 10, borderRadius: 15 },
+  dogImage: { width: 250, height: 250, marginTop: 20, borderRadius: 15 },
+  label: { fontSize: 18, marginBottom: 20, fontWeight: "bold" },
+});
+ChatGPT said:
+
+Oui, ici aussi il vaut mieux remplacer ton View racine par un SafeAreaView de react-native-safe-area-context, surtout si tu veux éviter que tes boutons et images ne se retrouvent derrière l’encoche ou la barre de statut sur iOS.
+
+Voici une version adaptée de ton HomeScreen :
+
+import React, { useState } from "react";
+import {
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Audio } from "expo-av";
+import * as SMS from "expo-sms";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export default function HomeScreen() {
+  const [dogImage, setDogImage] = useState<string | null>(null);
+  const [loadingDog, setLoadingDog] = useState(false);
+
+  const handleChat = async () => {
+    try {
+      const { sound } = await Audio.Sound.createAsync(
+        require("../../assets/sounds/cat.mp3")
+      );
+      await sound.playAsync();
+
+      let newCount = await AsyncStorage.getItem("chatClicks");
+      let newCountInt = (newCount ? Number.parseInt(newCount) : 0) + 1;
+      await AsyncStorage.setItem("chatClicks", newCountInt.toString());
+    } catch (err) {
+      console.warn("Erreur son chat :", err);
+    }
+  };
+
+  const handleDogButton = async () => {
+    try {
+      setLoadingDog(true);
+      const res = await fetch("https://dog.ceo/api/breeds/image/random");
+      const data = await res.json();
+      setDogImage(data.message);
+
+      const isAvailable = await SMS.isAvailableAsync();
+      if (isAvailable) {
+        await SMS.sendSMSAsync(["0606060606"], "Je n'aime pas les chats");
+      } else {
+        Alert.alert("SMS non disponible sur cet appareil");
+      }
+    } catch (err) {
+      console.warn("Erreur Dog :", err);
+      Alert.alert("Erreur lors de l'appel à l'API Dog");
+    } finally {
+      setLoadingDog(false);
+    }
+  };
+
+  const handleDogImageClick = async () => {
+    try {
+      let newCount = await AsyncStorage.getItem("dogClicks");
+      let newCountInt = (newCount ? Number.parseInt(newCount) : 0) + 1;
+      await AsyncStorage.setItem("dogClicks", newCountInt.toString());
+    } catch (err) {
+      console.warn("Erreur compteur Dog :", err);
+    }
+  };
+
+  const handleQuit = () => {
+    Alert.alert("Quit", "L'application va se fermer", [
+      { text: "OK", onPress: () => {} },
+    ]);
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Menu Principal</Text>
+
+      <TouchableOpacity onPress={handleChat}>
+        <Image
+          source={require("../../assets/images/cat.png")}
+          style={styles.catImage}
+        />
+      </TouchableOpacity>
+      <Text style={styles.label}>Chat</Text>
+
+      <TouchableOpacity style={styles.button} onPress={handleDogButton}>
+        <Text style={styles.buttonText}>Dog</Text>
+      </TouchableOpacity>
+
+      {dogImage && (
+        <TouchableOpacity onPress={handleDogImageClick}>
+          <Image source={{ uri: dogImage }} style={styles.dogImage} />
+        </TouchableOpacity>
+      )}
+
+      {loadingDog && (
+        <ActivityIndicator
+          size="large"
+          color="#007AFF"
+          style={{ marginTop: 20 }}
+        />
+      )}
+
+      <TouchableOpacity style={styles.button} onPress={handleQuit}>
+        <Text style={styles.buttonText}>Quit</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+  button: {
+    backgroundColor: "#007AFF",
+    padding: 15,
+    marginVertical: 10,
+    borderRadius: 10,
+    width: "70%",
+    alignItems: "center",
+  },
+  buttonText: { color: "white", fontSize: 18, fontWeight: "bold" },
+  catImage: { width: 200, height: 200, marginVertical: 10, borderRadius: 15 },
+  dogImage: { width: 250, height: 250, marginTop: 20, borderRadius: 15 },
+  label: { fontSize: 18, marginBottom: 20, fontWeight: "bold" },
+});
+
+
+✅ Points importants :
+
+SafeAreaView remplace le View racine.
+
+Le flex: 1 garantit que le contenu prend toute la hauteur de l’écran.
+
+Les images, boutons et textes sont automatiquement positionnés à l’intérieur de la zone “safe” sur tous les appareils.
+
+Si tu veux, je peux te montrer **une version qui utilise edges={['top', 'bottom']} pour contrôler précisément où le

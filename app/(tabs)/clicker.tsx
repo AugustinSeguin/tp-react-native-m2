@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { Text, Button, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -37,12 +38,12 @@ export default function ClickerScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Statistiques des clics</Text>
       <Text style={styles.stats}>Chat : {chatClicks}</Text>
       <Text style={styles.stats}>Dog : {dogClicks}</Text>
       <Button title="Réinitialiser" onPress={resetClicks} />
-    </View>
+    </SafeAreaView>
   );
 }
 

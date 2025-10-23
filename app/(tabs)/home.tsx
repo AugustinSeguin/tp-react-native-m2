@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  View,
   Text,
   StyleSheet,
   TouchableOpacity,
@@ -8,6 +7,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Audio } from "expo-av";
 import * as SMS from "expo-sms";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,7 +16,6 @@ export default function HomeScreen() {
   const [dogImage, setDogImage] = useState<string | null>(null);
   const [loadingDog, setLoadingDog] = useState(false);
 
-  // Jouer le son du chat + compteur
   const handleChat = async () => {
     try {
       const { sound } = await Audio.Sound.createAsync(
@@ -32,7 +31,6 @@ export default function HomeScreen() {
     }
   };
 
-  // Clique sur le bouton Dog : fetch image + préparation SMS
   const handleDogButton = async () => {
     try {
       setLoadingDog(true);
@@ -54,7 +52,6 @@ export default function HomeScreen() {
     }
   };
 
-  // Clique sur l'image du chien : +1 compteur
   const handleDogImageClick = async () => {
     try {
       let newCount = await AsyncStorage.getItem("dogClicks");
@@ -72,10 +69,9 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Menu Principal</Text>
 
-      {/* Image du chat */}
       <TouchableOpacity onPress={handleChat}>
         <Image
           source={require("../../assets/images/cat.png")}
@@ -84,12 +80,10 @@ export default function HomeScreen() {
       </TouchableOpacity>
       <Text style={styles.label}>Chat</Text>
 
-      {/* Bouton Dog */}
       <TouchableOpacity style={styles.button} onPress={handleDogButton}>
         <Text style={styles.buttonText}>Dog</Text>
       </TouchableOpacity>
 
-      {/* Image du chien (clic incrémente compteur) */}
       {dogImage && (
         <TouchableOpacity onPress={handleDogImageClick}>
           <Image source={{ uri: dogImage }} style={styles.dogImage} />
@@ -104,11 +98,10 @@ export default function HomeScreen() {
         />
       )}
 
-      {/* Bouton Quit */}
       <TouchableOpacity style={styles.button} onPress={handleQuit}>
         <Text style={styles.buttonText}>Quit</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import MapView, { Marker, LatLng } from "react-native-maps";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CarteScreen() {
   const mapRef = useRef<MapView>(null);
@@ -20,13 +21,17 @@ export default function CarteScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <MapView ref={mapRef} style={styles.map}>
         {cities.map((city, index) => (
-          <Marker key={index} coordinate={city} title={index === 0 ? "Toulon" : "Paris"} />
+          <Marker
+            key={index}
+            coordinate={city}
+            title={index === 0 ? "Toulon" : "Paris"}
+          />
         ))}
       </MapView>
-    </View>
+    </SafeAreaView>
   );
 }
 
