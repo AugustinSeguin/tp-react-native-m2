@@ -1,35 +1,45 @@
 import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-import HomeScreen from "./home";
-import CarteScreen from "./carte";
-import ClickerScreen from "./clicker";
+// Map route names to Ionicons glyph names.
+const getIconName = (routeName: string): keyof typeof Ionicons.glyphMap => {
+  if (routeName === "Carte") return "map";
+  if (routeName === "Clicker") return "stats-chart";
+  return "home";
+};
 
-const Tab = createBottomTabNavigator();
+type TabBarIconRendererProps = {
+  routeName: string;
+  color: string;
+  size: number;
+};
+const TabBarIconRenderer: React.FC<TabBarIconRendererProps> = ({
+  routeName,
+  color,
+  size,
+}) => <Ionicons name={getIconName(routeName)} size={size} color={color} />;
+
+// createScreenOptions is defined outside the component so we don't create inline components inside the render path.
+const createScreenOptions = (route: any) => {
+  const routeName = route?.name ?? "";
+  return {
+    headerShown: false,
+    tabBarActiveTintColor: "#007AFF",
+    tabBarInactiveTintColor: "gray",
+    tabBarIcon: ({ color, size }: { color: string; size: number }) => (
+      <TabBarIconRenderer routeName={routeName} color={color} size={size} />
+    ),
+  };
+};
 
 export default function TabsLayout() {
   return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      screenOptions={({ route }) => ({
-        headerShown: false, // Pas de header par défaut
-        tabBarIcon: ({ color, size }) => {
-          let iconName: keyof typeof Ionicons.glyphMap = "home";
-
-          if (route.name === "Home") iconName = "home";
-          else if (route.name === "Carte") iconName = "map";
-          else if (route.name === "Clicker") iconName = "stats-chart";
-
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: "#007AFF",
-        tabBarInactiveTintColor: "gray",
-      })}
-    >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Carte" component={CarteScreen} />
-      <Tab.Screen name="Clicker" component={ClickerScreen} />
-    </Tab.Navigator>
+    <Tabs screenOptions={({ route }) => createScreenOptions(route)}>
+      {/* The screen files are discovered by expo-router using the filesystem. */}
+      <Tabs.Screen name="Home" options={{ title: "Home" }} />
+      <Tabs.Screen name="Carte" options={{ title: "Carte" }} />
+      <Tabs.Screen name="Clicker" options={{ title: "Clicker" }} />
+    </Tabs>
   );
 }

@@ -31,13 +31,13 @@ export default function Splash() {
           // 5️⃣ Cacher le splash natif
           await SplashScreen.hideAsync();
 
-          // 6️⃣ Naviguer vers les tabs
-          router.replace("/(tabs)");
+          // 6️⃣ Naviguer vers la tab Home
+          router.replace({ pathname: "/(tabs)/home" });
         }, 2500);
       } catch (err) {
         console.warn("Erreur splash :", err);
         await SplashScreen.hideAsync();
-        router.replace("/(tabs)");
+        router.replace({ pathname: "/(tabs)/home" });
       }
     };
 
@@ -51,7 +51,11 @@ export default function Splash() {
       : require("../assets/images/splash-icon49.png");
 
   return (
-    <ImageBackground source={imageSource} style={styles.container} resizeMode="cover">
+    <ImageBackground
+      source={imageSource}
+      style={styles.container}
+      resizeMode="cover"
+    >
       <Text style={styles.text}>
         Bienvenue sur {"\n"} Chat is my best hybrid friend
       </Text>
