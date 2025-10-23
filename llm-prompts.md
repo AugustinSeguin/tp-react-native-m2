@@ -1,5 +1,7 @@
 # LLM Prompts
 
+**Créer le proket**
+
 peux tu me donner la commande pour créer une app expo go react native?
 ChatGPT said:
 
@@ -33,6 +35,8 @@ scanner le QR code avec l’application Expo Go sur ton téléphone (Android/iOS
 ou lancer sur un émulateur avec a (Android) ou i (iOS, sur macOS uniquement).
 
 Souhaites-tu que je t’explique aussi comment configurer TypeScript ou une structure de base pour ton app Expo ?
+
+**définir une version de node**
 
 You said:
 ok j'aimerai que tu me donne la commande pour définir une version de node par défaut:
@@ -70,6 +74,8 @@ nvm alias default 22.21.0
 Certaines plateformes comme Netlify, Vercel ou Expo EAS reconnaissent aussi le fichier .nvmrc automatiquement pour choisir la bonne version de Node à l’exécution.
 
 Souhaites-tu que je te montre comment forcer cette version de Node automatiquement à chaque ouverture de terminal (par ex. via .bashrc ou .zshrc) ?
+
+**définir .gitignore avant init commit**
 
 You said:
 peux tu me définir tout mon .gitignore pour un projet react native expo?
@@ -218,6 +224,9 @@ Les dossiers de build, logs et caches sont tous ignorés.
 Ce .gitignore est prêt pour Expo + React Native + TypeScript ou JS.
 
 Souhaites-tu que je t’ajoute la gestion d’EAS Build (Expo Application Services) aussi (pour ignorer les fichiers générés par eas build ou eas submit) ?
+
+**Contextualiser avec le besoin**
+**et demande d'une todo list avec fil conducteur**
 
 You said:
 j'ai un tp (devoir noté à faire). 
@@ -396,6 +405,8 @@ resetCounts() → remet à zéro
  Ajouter des icônes d’onglets (Ionicons)
 
 Souhaites-tu que je te génère le squelette complet du projet Expo (avec tous les écrans et navigation configurée) pour que tu puisses démarrer directement sur le code fonctionnel ?
+
+**Etape par etape: j'ai fait l'étape 1**
 
 You said:
 j'ai installé les packages.
@@ -593,6 +604,8 @@ Après 3 secondes → redirection vers le menu principal (qui affichera HomeScre
 
 Souhaites-tu que je continue avec l’étape 3 (le menu principal avec Chat / Dog / Quit) maintenant, toujours en .tsx ?
 
+**Contextualiser avec la structure du projet expo (chat voulait la changer)**
+
 You said:
 ok on va reprendre l'étape 2:
 voici la structure du projet en pj. je n'y toucherai pas stp
@@ -720,12 +733,16 @@ Après 3 s → redirection automatique vers ton layout (tabs) (ton menu principa
 
 Souhaites-tu que je passe à l’étape 3 (menu principal avec Chat / Dog / Quit) en gardant ta structure Expo Router ?
 
+**Je veux deux splashs screens différents selon le niveau de batterie**
+
 You said:
 en fait pour le splash screen c'est déjà un peu fait. 
 Actuellement par défaut avec expo on a ce fichier :splash-icon.png qui fait office de splash screen.
 Donc je vais te demander de me générer une image qui reprend la consigne.
 Je veux une image avec un fond beige clair incluant ce texte en gros en milieu : 
 ChatGPT said:
+
+**Je suis parti sur l'idée de 2 png différents (pas forcément nécessaire sachant que je pouvais juste changer le background color. Mais bon pk pas !)**
 You said:
 en fait pour le splash screen c'est déjà un peu fait. 
 Actuellement par défaut avec expo on a ce fichier :splash-icon.png qui fait office de splash screen.
@@ -885,6 +902,8 @@ Splash React personnalisé (après chargement JS)	Dynamique (tu peux changer d�
 
 Souhaites-tu que je te génère les deux images (splash-icon49.png et splash-icon51.png) au bon format Expo (1024×1024, texte centré) — saumon et bleu clair ?
 
+**Generer les images**
+
 You said:
 peux tu me générer les 2 imgs:
 splash-icon49.png → fond saumon (batterie < 50%)
@@ -892,10 +911,16 @@ splash-icon49.png → fond saumon (batterie < 50%)
 splash-icon51.png → fond bleu clair (batterie > 50%) ?
 ChatGPT said:
 Share
+
+**Generer les images**
+
 You said:
 et celle ci ? splash-icon51.png → fond bleu clair (batterie > 50%) ?
 ChatGPT said:
 Share
+
+**déboguer: la structure des fichiers es mauvaise avec le index.tsx**
+
 You said:
 j'ai bien créé les fichiers png.
 malheureusement j'ai cette erreur maintenant : 
@@ -1025,6 +1050,8 @@ export default function RootLayout() {
 Mais pour ton TP, la solution 1 est la plus simple et propre. ✅
 
 Si tu veux, je peux t’aider à ajuster ton index.tsx pour que la redirection se fasse proprement vers ton splash sans cette erreur (en me montrant son contenu actuel). Tu veux que je fasse ça ?
+
+**je voulais déboguer en fonction du niveau de batterie de mon tel pour voir si ca changeait réellement et donc oui c'est ok**
 
 You said:
 je suis parti sur l'option 2: 🩷 Option 2 — faire du splash une route par défaut
@@ -1225,6 +1252,8 @@ Si tu veux, je peux te réécrire ton index.tsx actuel avec cette structure, en 
 
 Veux‑tu que je fasse ça ?
 
+**déboguer la redirection après index.tsx**
+
 You said:
 voici mon code de index.tsx:
 export default function Splash() {
@@ -1369,6 +1398,8 @@ setTimeout après le hideAsync → l’utilisateur voit bien le splash 2,5s avan
 
 Si tu veux, je peux te faire une version encore plus fluide où la couleur du fond change dynamiquement selon la batterie et où l’image du splash disparaît en fondu avant la redirection.
 Veux‑tu que je fasse ça ?
+
+**déboguer la redirection après index.tsx**
 
 You said:
 voici le code : 
@@ -1540,6 +1571,8 @@ On ne retourne jamais null : le splash est toujours affiché via ImageBackgrou
 Si tu veux, je peux te faire une version avec fondu et couleur de fond dynamique selon la batterie pour un splash encore plus joli.
 Veux‑tu que je fasse ça ?
 
+**déboguer la redirection après index.tsx**
+
 You said:
 du coup je n'ai pas splash screen mais la redirection marche bien. Il faudrait peut etre modifier : 
 app/_layout.tsx
@@ -1581,6 +1614,8 @@ Ton index.tsx reste Splash screen indépendant, puis fait router.replace("/tabs"
 Si tu veux, on peut aller plus loin et créer une animation de fondu pour le splash, pour que le passage vers les tabs soit fluide et esthétique.
 
 Veux‑tu que je fasse ça ?
+
+**Recontexualiser sur ce qu'il reste à faire**
 
 You said:
 ok etape suivante : 
@@ -1664,6 +1699,8 @@ Composants écrans → HomeScreen, CarteScreen et ClickerScreen : tu peux mainte
 Si tu veux, je peux te générer le code complet de HomeScreen.tsx avec ton menu Chat / Dog / Quit, y compris le son du chat et la préparation du SMS, prêt à brancher sur ce layout.
 
 Veux‑tu que je fasse ça ?
+
+**Créer les fichiers + menus**
 
 You said:
 du coup générer ces fichiers stp :
@@ -1851,6 +1888,8 @@ Clicker → affiche le nombre de clics et permet le reset
 Si tu veux, je peux maintenant brancher le son du chat et l’API dog pour que ton menu Home soit complètement fonctionnel.
 
 Veux‑tu que je fasse ça ?
+
+**Chat a sauté une étape par rapport aux consignes: recontextualisation**
 
 You said:
 refais la home.tsx:
@@ -2066,6 +2105,8 @@ Si tu veux, je peux maintenant mettre à jour clicker.tsx pour stocker les clics
 
 Veux‑tu que je fasse ça ?
 
+**Chat a sauté une étape par rapport aux consignes: recontextualisation**
+
 You said:
   const handleChat = async () => {
     try {
@@ -2190,6 +2231,8 @@ Quit → alerte (Expo ne peut pas fermer l’app).
 Si tu veux, je peux maintenant faire la même chose pour le Dog : cliquer sur un bouton/image pour afficher l’image récupérée depuis l’API et préparer le SMS.
 
 Veux‑tu que je fasse ça ?
+
+**Déboguer compteur**
 
 You said:
 le compteur ne marche plus. pour rappel c'est +1 quand je click sur l'image du chat
@@ -2330,6 +2373,8 @@ UX identique à l’exemple précédent, avec images et loader pour Dog.
 Si tu veux, je peux maintenant mettre à jour clicker.tsx pour qu’il affiche ces compteurs et permette de les réinitialiser.
 
 Veux‑tu que je fasse ça ?
+
+**Déboguer compteur**
 
 You said:
 refais le chien désormais :
@@ -2490,6 +2535,8 @@ Si tu veux, je peux maintenant te générer le clicker.tsx final pour qu’il af
 
 Veux‑tu que je fasse ça ?
 
+**Déboguer compteur**
+
 You said:
 peux tu utiliser hooks react pour que la données soient bien à jour dans clicker.tsx ? actuellement ce n'est pas le cas
 ChatGPT said:
@@ -2589,6 +2636,9 @@ Si tu veux, je peux maintenant mettre à jour HomeScreen pour utiliser ce hook a
 
 Veux‑tu que je fasse ça ?
 
+**Déboguer compteur**
+**Oui ca commence a m'agacer et je ne suis pas patient**
+
 You said:
 non les hooks par defaut !!
 ChatGPT said:
@@ -2658,6 +2708,8 @@ Le bouton "Réinitialiser" remet tout à zéro et met à jour l’écran.
 Si tu veux, je peux maintenant mettre à jour HomeScreen pour que l’incrémentation du chien et du chat utilise aussi uniquement useState et AsyncStorage, parfaitement compatible avec ce ClickerScreen.
 
 Veux‑tu que je fasse ça ?
+
+**Déboguer compteur**
 
 You said:
 ok ca c good. le bouton réiniliaser marche. mais quand je quitte clickerScreen et y revient les valeurs ne sont plus réinitialisées
@@ -2740,6 +2792,8 @@ Si tu veux, je peux aussi te mettre HomeScreen avec la même logique pour l’in
 
 Veux‑tu que je fasse ça ?
 
+**Déboguer compteur**
+
 You said:
 toujours pas en fait. Recommence
 ChatGPT said:
@@ -2821,6 +2875,9 @@ Les clics depuis HomeScreen sont incrémentés et sauvegardés → affichés cor
 Si tu veux, je peux te refaire HomeScreen pour que le compteur chat/dog soit parfaitement synchronisé avec ce ClickerScreen, en utilisant seulement useState et AsyncStorage.
 
 Veux‑tu que je fasse ça ?
+
+**Déboguer compteur**
+**la je suis enerve**
 
 You said:
 de mieux en mieux ! les compteurs ne marcent pas du ttt
@@ -2919,6 +2976,10 @@ Si tu veux, je peux maintenant te refaire HomeScreen pour que l’incrémentatio
 
 Veux‑tu que je fasse ça ?
 
+**Déboguer compteur**
+**je reprends le truc en main: j'ai trouvé d'où ça vient.**
+**Comme ca devenait long j'ai un peu prompté à l'arrache avant: enervement + pas de contexte ni analyse de ma part (oui je l'avoue)**
+
 You said:
 a mon avis le pb est ici:
 
@@ -2996,6 +3057,9 @@ Les valeurs du Clicker sont toujours synchronisées avec ce qui se passe dans Ho
 Si tu veux, je peux te réécrire HomeScreen complet avec cette correction pour que tout marche parfaitement avec ClickerScreen.
 
 Veux‑tu que je fasse ça ?
+
+**débogage carte**
+**On ne voit ni Paris ni Toulon (comme pourtant demandé)**
 
 You said:
 voici ma carte : 
@@ -3082,6 +3146,9 @@ Les markers restent inchangés.
 Si tu veux, je peux te proposer une version automatique qui calcule le bounding box entre Toulon et Paris pour que la carte s’adapte automatiquement à toutes les villes que tu veux afficher.
 
 Veux‑tu que je fasse ça ?
+
+**débogage carte**
+**On ne voit ni Paris ni Toulon (comme pourtant demandé)**
 
 You said:
 import React from "react";
@@ -3179,5 +3246,4 @@ L’edgePadding ajoute un peu de marge autour.
 Tu peux facilement ajouter d’autres villes dans le tableau cities.
 
 Si tu veux, je peux te faire la version finale avec Zoom initial sur Paris mais Toulon visible, en gardant aussi la possibilité d’ajouter facilement d’autres villes.
-
 
